@@ -1,49 +1,59 @@
 import type { Chunk } from "./corpus";
 
 const STOP = new Set(
-  "a an and are as at be by for from has have he his how i in is it its me my of on or our she that the their them they this to was what when where which who why will with you your utkarsh khanna does did do about tell".split(
-    " ",
-  ),
+  (
+    "a an and are as at be by can could did do does for from had has have he her him his how i if in is it its " +
+    "know me my of on or our she that the their them they this to was what when where which who why will with " +
+    "would you your utkarsh khanna about tell any some there"
+  ).split(" "),
 );
 
-const SYNONYMS: Record<string, string> = {
-  cv: "resume",
-  résumé: "resume",
-  job: "experience",
-  jobs: "experience",
-  worked: "experience",
-  work: "experience",
-  employer: "experience",
-  company: "experience",
-  study: "education",
-  studied: "education",
-  degree: "education",
-  university: "education",
-  college: "education",
-  paper: "publication",
-  published: "publication",
-  research: "publication",
-  ieee: "publication",
-  mail: "email",
-  reach: "contact",
-  hire: "contact",
-  finetune: "fine-tuning",
-  finetuning: "fine-tuning",
-  llm: "llama",
+/** Query-side only, so documents keep their literal vocabulary. */
+const SYNONYMS: Record<string, string[]> = {
+  cv: ["resume"],
+  résumé: ["resume"],
+  job: ["role", "experience"],
+  employer: ["experience"],
+  company: ["experience"],
+  study: ["education", "b.tech"],
+  studied: ["education", "b.tech"],
+  degree: ["education", "b.tech"],
+  university: ["education", "nmims"],
+  college: ["education", "nmims"],
+  publish: ["publication", "paper"],
+  published: ["publication", "paper"],
+  paper: ["publication"],
+  research: ["publication", "paper"],
+  ieee: ["publication", "paper"],
+  mail: ["email"],
+  reach: ["contact", "email"],
+  hire: ["contact", "role"],
+  finetune: ["fine-tuning", "fine-tuned"],
+  finetuning: ["fine-tuning", "fine-tuned"],
+  "fine-tune": ["fine-tuning", "fine-tuned"],
+  llm: ["llama", "fine-tuning"],
+  language: ["languages"],
+  speak: ["languages"],
 };
 
-export function tokenize(text: string): string[] {
+/** Very light stemming: enough to match plurals and -ed/-ing forms. */
+function stem(t: string) {
+  if (t.length > 5 && t.endsWith("ing")) return t.slice(0, -3);
+  if (t.length > 4 && t.endsWith("ed")) return t.slice(0, -2);
+  if (t.length > 4 && t.endsWith("es") && !t.endsWith("ses")) return t.slice(0, -2);
+  if (t.length > 3 && t.endsWith("s") && !t.endsWith("ss")) return t.slice(0, -1);
+  return t;
+}
+
+export function tokenize(text: string, query = false): string[] {
   return text
     .toLowerCase()
     .replace(/[’']s\b/g, "")
     .split(/[^a-z0-9+#.\-é]+/)
     .map((t) => t.replace(/^[.\-]+|[.\-]+$/g, ""))
     .filter((t) => t.length > 1 && !STOP.has(t))
-    .flatMap((t) => {
-      const base = t.length > 4 && t.endsWith("s") && !t.endsWith("ss") ? t.slice(0, -1) : t;
-      const syn = SYNONYMS[t];
-      return syn ? [base, syn] : [base];
-    });
+    .flatMap((t) => [t, ...(query ? (SYNONYMS[t] ?? []) : [])])
+    .map(stem);
 }
 
 export type Bm25Index = {
@@ -67,7 +77,7 @@ export function buildBm25(chunks: Chunk[]): Bm25Index {
 }
 
 export function bm25Scores(index: Bm25Index, query: string, k1 = 1.4, b = 0.7): number[] {
-  const q = [...new Set(tokenize(query))];
+  const q = [...new Set(tokenize(query, true))];
   const N = index.docs.length;
   return index.docs.map((d) => {
     let s = 0;

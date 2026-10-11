@@ -56,7 +56,7 @@ export default function Terminal() {
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
-    const id = requestAnimationFrame(() => input.current?.focus());
+    const id = requestAnimationFrame(() => input.current?.focus({ preventScroll: true }));
     return () => {
       cancelAnimationFrame(id);
       prev?.focus?.({ preventScroll: true });
@@ -242,7 +242,7 @@ export default function Terminal() {
             animate={{ y: 0 }}
             exit={{ y: "-100%" }}
             transition={{ duration: 0.55, ease: ease.reveal }}
-            onClick={() => input.current?.focus()}
+            onClick={() => input.current?.focus({ preventScroll: true })}
             data-lenis-prevent
           >
             <div className="container-x flex items-center justify-between border-b border-white/10 py-2.5">

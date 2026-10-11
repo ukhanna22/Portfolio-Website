@@ -6,7 +6,8 @@ import { Spark } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 export function ChatLauncher() {
-  const open = useUI((s) => s.overlay === "chat");
+  // Out of the way whenever an overlay (chat, menu, palette, terminal) is open.
+  const open = useUI((s) => s.overlay !== null);
   return (
     <div
       className={cn(

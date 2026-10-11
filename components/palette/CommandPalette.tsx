@@ -37,7 +37,7 @@ export default function CommandPalette() {
   useEffect(() => {
     if (!open) return;
     restore.current = document.activeElement as HTMLElement | null;
-    const id = requestAnimationFrame(() => input.current?.focus());
+    const id = requestAnimationFrame(() => input.current?.focus({ preventScroll: true }));
     return () => {
       cancelAnimationFrame(id);
       restore.current?.focus?.({ preventScroll: true });

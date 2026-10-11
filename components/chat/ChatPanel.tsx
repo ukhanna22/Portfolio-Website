@@ -114,8 +114,12 @@ export default function ChatPanel() {
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
-    const id = requestAnimationFrame(() => inputRef.current?.focus());
+    const id = requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
+    // Full-screen sheet on phones: keep the page behind it from scrolling.
+    const lock = window.matchMedia("(max-width: 639px)").matches;
+    if (lock) document.documentElement.style.overflow = "hidden";
     return () => {
+      if (lock) document.documentElement.style.overflow = "";
       cancelAnimationFrame(id);
       prev?.focus?.({ preventScroll: true });
     };
