@@ -1,0 +1,30 @@
+export const education = {
+  degree: "B.Tech, Artificial Intelligence",
+  school: "Mukesh Patel School of Technology Management & Engineering, SVKM's NMIMS",
+  schoolShort: "NMIMS Mumbai",
+  location: "Mumbai, India",
+  start: "2021",
+  end: "2025",
+  highlights: [
+    { title: "Capstone: Wellness AI", detail: "Grade A · published at IEEE SCEECS 2025" },
+    { title: "Industry project: Protiviti India", detail: "Semester VIII · Grade A+" },
+    { title: "Certificate Program in AI", detail: "Virginia Tech with NMIMS · 2022–2024" },
+  ],
+  coursework: [
+    "Machine Learning",
+    "Deep Learning",
+    "Natural Language Processing",
+    "Computer Vision",
+    "Intelligent Systems I & II",
+    "Data Structures & Algorithms",
+    "Linear Algebra",
+    "Probability & Statistics",
+    "Optimization Techniques",
+    "Database Management Systems",
+  ],
+  readiness: [
+    { title: "APS certificate", detail: "Direct Access, German Embassy New Delhi · 2025" },
+    { title: "IELTS Academic 7.5", detail: "CEFR C1 · 2025" },
+  ],
+  next: "Applying to MSc Computer Science / AI programs in Europe for 2027.",
+} as const;
