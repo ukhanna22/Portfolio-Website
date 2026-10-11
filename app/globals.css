@@ -311,17 +311,27 @@ html.reveal .char {
   opacity: 1;
 }
 html.reveal .fade-up {
-  animation: fade-up 1s var(--ease-out) both;
+  /* clip + translate rather than opacity, so colours are never semi-transparent mid-reveal */
+  animation: fade-up 1s var(--ease-out) backwards;
   animation-delay: var(--d, 0.6s);
 }
 @keyframes fade-up {
   from {
-    opacity: 0;
+    clip-path: inset(0 0 100% 0);
     transform: translateY(14px);
   }
   to {
-    opacity: 1;
+    clip-path: inset(0 0 0 0);
     transform: none;
+  }
+}
+
+@keyframes art-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -10,18 +8,26 @@ import { JsonLd, personJsonLd, siteDescription, siteTitle, siteUrl } from "@/lib
 import { profile } from "@/content/profile";
 import "./globals.css";
 
+// Fonts are subset to the characters the site uses (Latin + a few symbols): ~47 KB in total.
+// Geist Sans keeps only the 400–500 weight range; Geist Mono is a static 400.
+const geistSans = localFont({
+  src: "../assets/fonts/Geist-latin.woff2",
+  variable: "--font-geist-sans",
+  weight: "400 500",
+  display: "swap",
+});
+const geistMono = localFont({
+  src: "../assets/fonts/GeistMono-400-latin.woff2",
+  variable: "--font-geist-mono",
+  weight: "400",
+  display: "swap",
+  adjustFontFallback: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+});
 const instrument = localFont({
   src: [
-    {
-      path: "../assets/fonts/instrument-serif-latin-400-normal.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/instrument-serif-latin-400-italic.woff2",
-      weight: "400",
-      style: "italic",
-    },
+    { path: "../assets/fonts/InstrumentSerif-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/InstrumentSerif-italic.woff2", weight: "400", style: "italic" },
   ],
   variable: "--font-instrument",
   display: "swap",
@@ -76,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable} ${instrument.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrument.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />

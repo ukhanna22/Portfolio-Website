@@ -35,7 +35,17 @@ export function Work() {
             data-reveal
             style={{ "--reveal-delay": `${(i % 2) * 0.08}s` } as React.CSSProperties}
           >
-            <ProjectCard project={p} index={i} />
+            <ProjectCard
+              project={{
+                slug: p.slug,
+                title: p.title,
+                category: p.category,
+                hook: p.hook,
+                stack: p.stack,
+                art: p.art,
+              }}
+              index={i}
+            />
           </div>
         ))}
         <aside

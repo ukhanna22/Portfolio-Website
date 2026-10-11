@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { useRef, ViewTransition } from "react";
 import type { Project } from "@/content/projects";
+
+export type CardData = Pick<Project, "slug" | "title" | "category" | "hook" | "stack" | "art">;
 import { isTodo } from "@/content/todo";
 import { ProjectArt } from "./ProjectArt";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { isFinePointer, prefersReducedMotion } from "@/lib/utils";
 
 /** Gallery card: tilts in 3D on hover, reveals the stack, scales the art inside its mask. */
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({ project, index }: { project: CardData; index: number }) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   const onMove = (e: React.PointerEvent) => {

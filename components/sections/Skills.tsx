@@ -1,4 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { projects } from "@/content/projects";
+import { skillGroups } from "@/content/skills";
 import { SkillsMap } from "./SkillsMap";
 
 export function Skills() {
@@ -22,7 +24,10 @@ export function Skills() {
           Not a logo wall. Every skill with a dot links to the projects where it was actually used.
         </p>
         <div className="mt-14">
-          <SkillsMap />
+          <SkillsMap
+            skillGroups={skillGroups}
+            projects={projects.map(({ slug, title, category }) => ({ slug, title, category }))}
+          />
         </div>
       </div>
     </section>

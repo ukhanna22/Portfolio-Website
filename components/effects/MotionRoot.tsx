@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { setLenis } from "@/lib/scroll";
-import { onIdle, prefersReducedMotion } from "@/lib/utils";
+import { isFinePointer, onIdle, prefersReducedMotion } from "@/lib/utils";
 
 /**
  * Global motion plumbing:
@@ -35,9 +35,10 @@ export function MotionRoot() {
     return () => io.disconnect();
   }, [pathname]);
 
-  // Lenis + GSAP ticker.
+  // Lenis + GSAP ticker: wheel/trackpad devices only. Touch scrolling is already native-smooth,
+  // so phones never download either library.
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion() || !isFinePointer()) return;
     let destroyed = false;
     let cleanup = () => {};
     const cancel = onIdle(async () => {

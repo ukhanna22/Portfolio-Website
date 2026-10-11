@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import type { ArtVariant } from "@/content/projects";
 
 /**
@@ -284,10 +287,32 @@ const variants: Record<ArtVariant, () => React.ReactElement> = {
   scan: Scan,
 };
 
+/**
+ * Rendered on the client once the cover nears the viewport, so ~40 KB of SVG stays out of the
+ * HTML and the RSC payload. Until then only the grid shows.
+ */
 export function ProjectArt({ variant, className }: { variant: ArtVariant; className?: string }) {
+  const ref = useRef<SVGSVGElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const Art = variants[variant];
   return (
     <svg
+      ref={ref}
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMidYMid slice"
       className={className}
@@ -306,7 +331,11 @@ export function ProjectArt({ variant, className }: { variant: ArtVariant; classN
         </pattern>
       </defs>
       <rect width={W} height={H} fill={`url(#grid-${variant})`} />
-      <Art />
+      {shown && (
+        <g style={{ animation: "art-in 0.9s var(--ease-out) both" }}>
+          <Art />
+        </g>
+      )}
     </svg>
   );
 }

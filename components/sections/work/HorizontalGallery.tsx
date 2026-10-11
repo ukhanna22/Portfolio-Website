@@ -20,9 +20,15 @@ export function HorizontalGallery({
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
+    const desktop = window.matchMedia("(min-width: 1024px)");
     let revert = () => {};
+    let started = false;
     let cancelled = false;
-    (async () => {
+
+    // GSAP is only fetched once the viewport is wide enough to pin.
+    const start = async () => {
+      if (started || !desktop.matches) return;
+      started = true;
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),
         import("gsap/ScrollTrigger"),
@@ -54,13 +60,16 @@ export function HorizontalGallery({
           delete el.dataset.pinned;
         };
       });
-      // Fonts and images can change widths after first layout.
-      const refresh = () => ScrollTrigger.refresh();
-      document.fonts?.ready.then(refresh);
+      // Fonts can change widths after first layout.
+      document.fonts?.ready.then(() => ScrollTrigger.refresh());
       revert = () => mm.revert();
-    })();
+    };
+
+    void start();
+    desktop.addEventListener("change", start);
     return () => {
       cancelled = true;
+      desktop.removeEventListener("change", start);
       revert();
     };
   }, []);

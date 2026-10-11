@@ -21,15 +21,15 @@ cp .env.example .env.local   # add ANTHROPIC_API_KEY to enable the chatbot
 npm run dev                  # http://localhost:3000
 ```
 
-| Script              | What it does                                                   |
-| ------------------- | -------------------------------------------------------------- |
-| `npm run dev`       | Rebuilds the RAG index, starts the dev server                  |
-| `npm run build`     | Rebuilds the RAG index, production build                       |
-| `npm run lint`      | ESLint                                                         |
-| `npm run typecheck` | `tsc --noEmit`                                                 |
-| `npm run format`    | Prettier                                                       |
-| `npm run todos`     | Lists every `[TODO]` placeholder still in the content files    |
-| `npm run rag:index` | Chunks `/content` into `content/.generated/rag-index.json`     |
+| Script              | What it does                                                |
+| ------------------- | ----------------------------------------------------------- |
+| `npm run dev`       | Rebuilds the RAG index, starts the dev server               |
+| `npm run build`     | Rebuilds the RAG index, production build                    |
+| `npm run lint`      | ESLint                                                      |
+| `npm run typecheck` | `tsc --noEmit`                                              |
+| `npm run format`    | Prettier                                                    |
+| `npm run todos`     | Lists every `[TODO]` placeholder still in the content files |
+| `npm run rag:index` | Chunks `/content` into `content/.generated/rag-index.json`  |
 
 ## Editing content
 

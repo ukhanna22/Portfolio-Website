@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { skillGroups } from "@/content/skills";
-import { projects } from "@/content/projects";
+import type { SkillGroup } from "@/content/skills";
 import { cn } from "@/lib/utils";
 
 /** Hover (or tap) a skill to light up the projects where it was used. */
-export function SkillsMap() {
+export type SkillProject = { slug: string; title: string; category: string };
+
+export function SkillsMap({
+  skillGroups,
+  projects,
+}: {
+  skillGroups: SkillGroup[];
+  projects: SkillProject[];
+}) {
   const [active, setActive] = useState<{ name: string; projects: string[] } | null>(null);
   const [pinned, setPinned] = useState(false);
 
